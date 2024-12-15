@@ -651,7 +651,7 @@ class OffensivePolicy(DecisionPolicyAgent):
         score = self.get_score(game_state)
 
         if score >= 8 and not game_state.get_agent_state(self.index).is_pacman:
-            print("protect")
+            #print("protect")
             self.offensive = 0
 
         features = util.Counter()
