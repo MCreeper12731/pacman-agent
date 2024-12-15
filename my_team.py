@@ -44,7 +44,7 @@ class DecisionPolicyAgent(CaptureAgent):
         self.prevNoisyDist = None
         self.centers = []
 
-        self.prob_maps = [self.initialize_prob_map(), self.initialize_prob_map()]
+        self.prob_maps = [self.initialize_prob_map(game_state), self.initialize_prob_map(game_state)]
 
         self.initialize_walls_caves(game_state)
         
@@ -87,11 +87,14 @@ class DecisionPolicyAgent(CaptureAgent):
                             continue
                         self.cave_layout[x][y] = 'C'
 
-    def initialize_prob_map(self):
-        total_positions = 30*14
+    def initialize_prob_map(self, game_state):
+        n = game_state.data.layout.height
+        m = game_state.data.layout.width
+
+        total_positions = n*m
         prob_map = {}
-        for x in range(1, 31):
-            for y in range(1, 15):
+        for x in range(1, m-1):
+            for y in range(1, n-1):
                 prob_map[(x, y)] = 1 / total_positions
 
         return prob_map
@@ -116,6 +119,7 @@ class DecisionPolicyAgent(CaptureAgent):
 
         self.food_sorted_by_ratio = sorted(food_list, key=lambda food: 
                   (self.get_maze_distance(my_pos, food)/(max(1, min([self.get_maze_distance(food, center) for center in self.centers])) if len(self.centers) > 0 else 1)))
+
 
 
     def compute_prev(self, game_state):
@@ -435,6 +439,8 @@ class DecisionPolicyAgent(CaptureAgent):
             else:
                 if center[0] > width/2:
                     centers_relevant.append(center)
+
+
             
         noisy_distance = 0
         if len(centers_relevant) > 0:
@@ -442,9 +448,10 @@ class DecisionPolicyAgent(CaptureAgent):
 
         features['approach_noisy'] = noisy_distance
 
+        """
         if self.prevNoisyDist != None:
             features['approach_noisy'] -= self.prevNoisyDist
-
+        """
 
         return features
 
@@ -468,7 +475,7 @@ class DecisionPolicyAgent(CaptureAgent):
         if game_state.get_agent_state(self.index).is_pacman:
             if_ghost = 0
         
-        return {'approach_noisy': -10*if_ghost, 'num_invaders': -1000, 'on_defense': 100, 'invader_distance': -10, 'stop': -100, 'reverse': -2, 'distance_to_food': -5, 'capsule_distance': -10*on_capsule, 'ally_distance': 15}
+        return {'approach_noisy': -10*if_ghost, 'num_invaders': -1000, 'on_defense': 100, 'invader_distance': -100, 'stop': -100, 'reverse': -2, 'distance_to_food': -5*0, 'capsule_distance': -10*on_capsule*0, 'ally_distance': 15*0}
 
     def constraint_maze_distance(self, pos1, pos2):
         if self.custom_distancer != None:
@@ -705,8 +712,11 @@ class OffensivePolicy(DecisionPolicyAgent):
             if self.prevEnemyDist != None:
                 features['enemy_distance'] -= self.prevEnemyDist
 
+            """
             if self.prevCapsuleDist != None:
                 features['capsule_distance'] -= self.prevCapsuleDist
+            """
+            features['capsule_distance'] = 0
 
             # Caves
             features['distance_to_entry'] = 0
@@ -726,12 +736,12 @@ class OffensivePolicy(DecisionPolicyAgent):
 
             if (enemy_distance < self.react_distance and enemy_distance != -1):
                 if self.is_cave(current_pos[0], current_pos[1]):
-                    #print("escaping cave")
+                    print("escaping cave")
                     min_distance = min([self.get_maze_distance(my_pos, escape) for escape in self.get_escapes(game_state)])
                     features['distance_to_entry'] = min_distance
                 else:
                     if self.is_cave(my_pos[0], my_pos[1]) or self.is_entry(my_pos[0], my_pos[1]):
-                        #print("avoiding caves")
+                        print("avoiding caves")
                         features['avoid_cave'] = 1
 
 
@@ -796,7 +806,7 @@ class OffensivePolicy(DecisionPolicyAgent):
                 #print("going home!")
                 go_home = -100
 
-            return {'home_distance': go_home, 'distance_to_food': -10*p, 'enemy_distance': 10, 'capsule_distance': -1, 'distance_to_entry': -100, 'avoid_cave': -100, 'avoid_noisy': 2, 'retreat':-2}
+            return {'home_distance': go_home, 'distance_to_food': -20*p, 'enemy_distance': 100, 'capsule_distance': -1, 'distance_to_entry': -100, 'avoid_cave': -100, 'avoid_noisy': 2, 'retreat':-2}
 
 class DefensivePolicy(DecisionPolicyAgent):
     def __init__(self, index):
