@@ -12,6 +12,7 @@
 
 * 63220254 - Matjaž Pogačnik - mp24170@student.uni-lj.si - MAZI2
 * 63220341 - Jan Tršan - jt46523@student.uni-lj.si - JMC-Nedsa12
+* 63220308 - Vito Martin Strah Hren - vs97051@student.uni-lj.si - MCreeper12731
 
 Replace the lines above with the correct details of members. Delete or add lines as needed.
 
