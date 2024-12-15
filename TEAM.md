@@ -1,18 +1,17 @@
 # Team Information
 
-**Course:** _[fill your course code and name]_
+**Course:** _63214 Osnove umetne inteligence_
 
-**Semester:** Semester 2, 2020
+**Semester:** Semester 1, 2024
 
-**Instructor:** _[name of your instructor]_
+**Instructor:** _Zoran Bosnić_
 
-**Team name:** _[replace this with team name in plan text]_
+**Team name:** _Magic "Egg Cuber" Egg Press_
 
 **Team members:**
 
-* Student 1's Student number - Full Name - Student email - Student Github id
-* Student 2's Student number - Full Name - Student email - Student Github id
-* Student 3's Student number - Full Name - Student email - Student Github id
+* 63220254 - Matjaž Pogačnik - mp24170@student.uni-lj.si - MAZI2
+* 63220341 - Jan Tršan - jt46523@student.uni-lj.si - JMC-Nedsa12
 
 Replace the lines above with the correct details of members. Delete or add lines as needed.
 
